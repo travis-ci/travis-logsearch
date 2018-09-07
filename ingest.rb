@@ -15,6 +15,20 @@ require 'faraday'
 # ELASTICSEARCH_URL || BONSAI_URL
 
 class JobConfig < ActiveRecord::Base
+  def normalized
+    config = self.config ? self.config : {}
+
+    {
+      sudo: normalize_string(config['sudo']),
+      script: normalize_string(config['script']),
+    }
+  end
+
+  def normalize_string(v)
+    return nil if v.nil?
+    return v if String === v
+    v.inspect
+  end
 end
 
 class Repository < ActiveRecord::Base
@@ -50,8 +64,9 @@ class Ingester
 
   def batches
     Job
-      .where("finished_at < now() - interval '10 minutes'")
-      .limit(10)
+      .includes(:config)
+      .includes(:repository)
+      .where("jobs.created_at > now() - interval '10 minutes'")
       .in_batches(of: 20)
   end
 
@@ -80,12 +95,6 @@ class Ingester
     id = job.id
     log = get_log_from_s3(id) || get_log_from_logs_api(id)
 
-    puts job.id.inspect
-    puts job.config.inspect
-    puts job.config_id.inspect
-    puts job.repository.inspect
-    puts job.repository_id.inspect
-
     doc = {
       log: log,
       repository_id: job.repository_id,
@@ -96,18 +105,22 @@ class Ingester
       finished_at: job.finished_at,
       canceled_at: job.canceled_at,
       repo_slug: job.repository&.slug,
-      raw_config: job.config,
-      config: normalize_config(JSON.parse(job.config)),
+      raw_config: job.config&.config.to_json,
+      config: job.config&.normalized,
     }
   end
 
   def get_log_from_s3(id)
     key = "jobs/#{id}/log.txt"
-    obj = s3.get_object(
-      bucket: ENV['LOGS_S3_BUCKET'],
-      key: key,
-    )
-    log = obj.body.read
+    begin
+      obj = s3.get_object(
+        bucket: ENV['LOGS_S3_BUCKET'],
+        key: key,
+      )
+      obj.body.read
+    rescue Aws::S3::Errors::NoSuchKey => e
+      nil
+    end
   end
 
   def get_log_from_logs_api(id)
@@ -117,19 +130,7 @@ class Ingester
     end
     return nil unless resp.success?
     data = JSON.parse(resp.body)
-  end
-
-  def normalize_string(v)
-    return nil if v.nil?
-    return v if String === v
-    v.inspect
-  end
-
-  def normalize_config(config)
-    {
-      sudo: normalize_string(config['sudo']),
-      script: normalize_string(config['script']),
-    }
+    data['content']
   end
 
   def logs_conn
