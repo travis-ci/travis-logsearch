@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+$: << 'lib'
+
+require 'irb'
+require 'travis/logsearch'
+
+IRB.start(__FILE__)
