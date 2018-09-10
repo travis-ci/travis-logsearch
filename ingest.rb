@@ -103,6 +103,7 @@ class Ingester
     log = get_log_from_s3(id) || get_log_from_logs_api(id)
 
     doc = {
+      job_id: id,
       log: log,
       repository_id: job.repository_id,
       queue: job.queue,
