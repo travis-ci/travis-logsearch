@@ -9,6 +9,7 @@
 
 require 'travis/logsearch/model'
 require 'travis/logsearch/ingester'
+require 'travis/logsearch/worker'
 
 module Travis
   module LogSearch

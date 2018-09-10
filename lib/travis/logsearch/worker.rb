@@ -7,6 +7,8 @@ module Travis
     class Worker
       include Sidekiq::Worker
 
+      sidekiq_options queue: 'logsearch', retry: false, backtrace: true
+
       def perform(job_id)
         Travis::LogSearch.ingester.run(job_id)
       end
