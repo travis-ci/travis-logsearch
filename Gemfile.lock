@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/travis-ci/jemalloc-rb
+  revision: e9528e26aff663efa2c124cdeca47700e389097d
+  specs:
+    jemalloc (1.0.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -647,6 +653,7 @@ DEPENDENCIES
   aws-sdk (~> 3)
   elasticsearch
   faraday
+  jemalloc!
   net-http-persistent
   pg
   sidekiq
