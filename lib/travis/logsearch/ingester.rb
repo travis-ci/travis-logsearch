@@ -16,11 +16,13 @@ module Travis
       end
 
       def send_to_elasticsearch(docs)
-        body = docs.map do |doc|
-          { create: { _index: es_index_name, _type: 'doc', _id: SecureRandom.hex, data: doc } }
+        docs.each do |doc|
+          es.create(
+            index: es_index_name,
+            type: 'doc',
+            body: doc,
+          )
         end
-
-        es.bulk body: body
       end
 
       # create one index per day (so that we can manage retention)
