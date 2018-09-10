@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+$: << 'lib'
+
+require 'travis/logsearch'
+
+unless ARGV.size > 0
+  puts "Usage: bin/ingest <job_id>"
+  exit 1
+end
+
+job_id = Integer(ARGV.shift)
+
+Travis::LogSearch.setup
+Travis::LogSearch::Worker.perform_async(job_id)
