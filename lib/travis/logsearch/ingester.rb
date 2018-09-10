@@ -51,7 +51,7 @@ module Travis
 
         doc = {
           job_id: id,
-          log: log,
+          log: clear_ansi(log),
           repository_id: job.repository_id,
           queue: job.queue,
           state: job.state,
@@ -86,6 +86,12 @@ module Travis
         return nil unless resp.success?
         data = JSON.parse(resp.body)
         data['content']
+      end
+
+      def clear_ansi(content)
+        content.gsub(/\r\r/, "\r")
+               .gsub(/^.*\r(?!$)/, '')
+               .gsub(/\x1b(\[|\(|\))[;?0-9]*[0-9A-Za-z]/m, '')
       end
 
       def logs_conn
