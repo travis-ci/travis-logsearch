@@ -5,4 +5,6 @@ $: << 'lib'
 require 'irb'
 require 'travis/logsearch'
 
+Travis::LogSearch.setup
+
 IRB.start(__FILE__)
