@@ -7,6 +7,7 @@
 # ELASTICSEARCH_URL || BONSAI_URL
 # REDIS_URL
 
+require 'redis-namespace'
 require 'travis/logsearch/model'
 require 'travis/logsearch/ingester'
 require 'travis/logsearch/worker'
