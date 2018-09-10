@@ -72,10 +72,14 @@ class Ingester
 
   def send_to_elasticsearch(docs)
     body = docs.map do |doc|
-      { create: { _index: 'jobs', _type: 'doc', _id: SecureRandom.hex, data: doc } }
+      { create: { _index: es_index_name, _type: 'doc', _id: SecureRandom.hex, data: doc } }
     end
 
     es.bulk body: body
+  end
+
+  def es_index_name
+    'events-' + DateTime.now.strftime('%Y_%m_%d')
   end
 
   def process_jobs(jobs)

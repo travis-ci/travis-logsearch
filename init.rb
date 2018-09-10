@@ -8,11 +8,10 @@ es = Elasticsearch::Client.new(
   log: ENV['DEBUG'] == 'true',
 )
 
-es.indices.delete(index: 'jobs')
-
-es.indices.create(
-  index: 'jobs',
+es.indices.put_template(
+  name: 'events',
   body: {
+    template: 'events-*',
     settings: {
       index: {
         number_of_shards: 5,
