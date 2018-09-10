@@ -78,6 +78,9 @@ class Ingester
     es.bulk body: body
   end
 
+  # create one index per day (so that we can manage retention)
+  # prefix the index name with `events-` so that it matches the
+  # auto-create patterns on bonsai elasticsearch
   def es_index_name
     'events-' + DateTime.now.strftime('%Y_%m_%d')
   end
