@@ -10,7 +10,7 @@ module Travis
   module LogSearch
     class Ingester
       def run(job_id)
-        job = Job.includes(:config).includes(:repository).find(id)
+        job = Job.includes(:config).includes(:repository).find(job_id)
         docs = process_jobs([job])
         send_to_elasticsearch(docs)
       end
