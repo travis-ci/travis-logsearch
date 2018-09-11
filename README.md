@@ -14,13 +14,21 @@ export LOGS_API_AUTH_TOKEN=...
 # FOLLOWER_URL on travis-production
 export DATABASE_URL=...
 
+# REDISGREEN_URL on travis-production
+export REDIS_URL=...
+
 # BONSAI_URL on travis-logsearch-production
 export ELASTICSEARCH_URL=...
 ```
 
+## Setup
+
+```
+heroku run ruby setup.rb -a <travis-logsearch-*>
+```
+
 ## TODO
 
-* notify from hub on job finished
 * limit retention to a week or so
 * site awareness
 * docs
