@@ -47,7 +47,10 @@ module Travis
 
       def process_job(job)
         id = job.id
-        log = get_log_from_s3(id) || get_log_from_logs_api(id)
+
+        # try s3 first to avoid call against logs api
+        # try s3 again in the end in case log was archived in between the two calls
+        log = get_log_from_s3(id) || get_log_from_logs_api(id) || get_log_from_s3(id)
 
         doc = {
           job_id: id,
