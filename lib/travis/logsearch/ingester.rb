@@ -54,7 +54,7 @@ module Travis
 
         doc = {
           job_id: id,
-          log: clear_ansi(log),
+          log: log ? clear_ansi(log) : nil,
           repository_id: job.repository_id,
           queue: job.queue,
           state: job.state,
