@@ -70,6 +70,7 @@ module Travis
           owner_name: job.repository.owner_name,
           raw_config: job.config&.config.to_json,
           config: job.config&.normalized,
+          site: config.site,
         }
       end
 
