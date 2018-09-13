@@ -24,11 +24,6 @@ module Travis
       ::Sidekiq.configure_client { |c| c.redis = redis }
     end
 
-    def self.run
-      setup
-      ingester.run(id)
-    end
-
     def self.ingester
       Thread.current[:ingester] ||= Ingester.new
     end
