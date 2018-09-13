@@ -3,9 +3,10 @@
 require 'travis/exceptions'
 require 'travis/logger'
 require 'travis/metrics'
-require 'travis/logsearch/config'
+require 'travis/support/database'
 require 'travis/logsearch/model'
 require 'travis/logsearch/ingester'
+require 'travis/logsearch/worker'
 require 'travis/logsearch/worker'
 
 module Travis
