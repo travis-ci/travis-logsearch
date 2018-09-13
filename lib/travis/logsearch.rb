@@ -15,7 +15,10 @@ require 'travis/logsearch/worker'
 module Travis
   module LogSearch
     def self.setup
-      ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
+      ActiveRecord::Base.establish_connection(
+        url:  ENV['DATABASE_URL'],
+        pool: ENV['DB_POOL']&.to_i || ENV['SIDEKIQ_THREADS']&.to_i,
+      )
       ActiveRecord::Base.logger = Logger.new(STDOUT) if ENV['DEBUG'] == 'true'
 
       redis = { url: ENV['REDIS_URL'], namespace: 'sidekiq' }
