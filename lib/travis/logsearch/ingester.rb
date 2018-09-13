@@ -53,7 +53,7 @@ module Travis
         log = get_log_from_s3(id) || get_log_from_logs_api(id) || get_log_from_s3(id)
 
         if !log && job.state != 'canceled'
-          puts "Warning: no log found for job id=#{id} repo=#{job.repository&.slug}"
+          puts "Warning: no log found for job id=#{id} repo=#{job.repository.slug}"
         end
 
         doc = {
@@ -66,7 +66,7 @@ module Travis
           started_at: job.started_at,
           finished_at: job.finished_at,
           canceled_at: job.canceled_at,
-          repo_slug: job.repository&.slug,
+          repo_slug: job.repository.slug,
           owner_name: job.repository.owner_name,
           raw_config: job.config&.config.to_json,
           config: job.config&.normalized,
