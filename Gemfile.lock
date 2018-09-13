@@ -11,6 +11,26 @@ GIT
     travis-config (1.1.2)
       hashr (~> 2.0)
 
+GIT
+  remote: https://github.com/travis-ci/travis-exceptions
+  revision: ab236981f810b820bc3ebfaf33f317bbaa9b3465
+  specs:
+    travis-exceptions (0.0.2)
+      sentry-raven
+
+GIT
+  remote: https://github.com/travis-ci/travis-logger
+  revision: b589e0ca0e9f1a5d6cd8536ff7288d21d36c7560
+  specs:
+    travis-logger (0.0.1)
+
+GIT
+  remote: https://github.com/travis-ci/travis-metrics
+  revision: ce620aecdf179ea82280872ec56aa3095a2e59a5
+  specs:
+    travis-metrics (2.0.0)
+      metriks-librato_metrics (~> 1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -26,6 +46,9 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     arel (9.0.0)
+    atomic (1.1.101)
+    avl_tree (1.2.1)
+      atomic (~> 1.1)
     aws-eventstream (1.0.1)
     aws-partitions (1.103.0)
     aws-sdk (3.0.1)
@@ -632,9 +655,16 @@ GEM
     faraday (0.15.2)
       multipart-post (>= 1.2, < 3)
     hashr (2.0.1)
+    hitimes (1.3.0)
     i18n (1.1.0)
       concurrent-ruby (~> 1.0)
     jmespath (1.4.0)
+    metriks (0.9.9.8)
+      atomic (~> 1.0)
+      avl_tree (~> 1.2.0)
+      hitimes (~> 1.1)
+    metriks-librato_metrics (1.0.6)
+      metriks (>= 0.9.9.6)
     minitest (5.11.3)
     multi_json (1.13.1)
     multipart-post (2.0.0)
@@ -647,6 +677,8 @@ GEM
     redis (4.0.2)
     redis-namespace (1.6.0)
       redis (>= 3.0.4)
+    sentry-raven (2.7.4)
+      faraday (>= 0.7.6, < 1.0)
     sidekiq (5.2.1)
       connection_pool (~> 2.2, >= 2.2.2)
       rack-protection (>= 1.5.0)
@@ -669,6 +701,9 @@ DEPENDENCIES
   redis-namespace
   sidekiq
   travis-config!
+  travis-exceptions!
+  travis-logger!
+  travis-metrics!
 
 RUBY VERSION
    ruby 2.5.1p57
