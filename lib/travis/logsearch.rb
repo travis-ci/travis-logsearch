@@ -22,6 +22,10 @@ module Travis
       Thread.current[:ingester] ||= Ingester.new
     end
 
+    def self.logger
+      @logger ||= Travis::Logger.new(STDOUT, config)
+    end
+
     def self.config
       @config ||= Config.load
     end
