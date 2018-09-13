@@ -5,7 +5,7 @@ require 'sidekiq'
 module Travis
   module LogSearch
     class Worker
-      include Sidekiq::Worker
+      include ::Sidekiq::Worker
 
       sidekiq_options queue: 'logsearch', backtrace: true
 
