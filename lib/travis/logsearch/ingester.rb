@@ -52,6 +52,10 @@ module Travis
         # try s3 again in the end in case log was archived in between the two calls
         log = get_log_from_s3(id) || get_log_from_logs_api(id) || get_log_from_s3(id)
 
+        unless log
+          puts "Warning: no log found for job id=#{id} repo=#{job.repository&.slug}"
+        end
+
         doc = {
           job_id: id,
           log: log ? clear_ansi(log) : nil,
