@@ -8,6 +8,7 @@
 # REDIS_URL
 
 require 'redis-namespace'
+require 'travis/logsearch/config'
 require 'travis/logsearch/model'
 require 'travis/logsearch/ingester'
 require 'travis/logsearch/worker'
@@ -15,14 +16,10 @@ require 'travis/logsearch/worker'
 module Travis
   module LogSearch
     def self.setup
-      ActiveRecord::Base.establish_connection(
-        adapter: 'postgresql',
-        url:     ENV['DATABASE_URL'],
-        pool:    ENV['DB_POOL']&.to_i || ENV['SIDEKIQ_THREADS']&.to_i,
-      )
-      ActiveRecord::Base.logger = Logger.new(STDOUT) if ENV['DEBUG'] == 'true'
+      ActiveRecord::Base.establish_connection(config[:database].to_h)
+      ActiveRecord::Base.logger = Logger.new(STDOUT) if config.debug
 
-      redis = { url: ENV['REDIS_URL'], namespace: 'sidekiq' }
+      redis = { url: config.redis.url, namespace: config.sidekiq.namespace }
       ::Sidekiq.configure_server { |c| c.redis = redis }
       ::Sidekiq.configure_client { |c| c.redis = redis }
     end
@@ -33,7 +30,11 @@ module Travis
     end
 
     def self.ingester
-      Thread.current[:ingester] ||= Ingester.new
+      Thread.current[:ingester] ||= Ingester.new(config)
+    end
+
+    def self.config
+      @config ||= Config.load
     end
   end
 end

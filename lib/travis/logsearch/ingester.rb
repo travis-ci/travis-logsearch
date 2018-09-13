@@ -111,9 +111,13 @@ module Travis
 
       def es
         @es ||= Elasticsearch::Client.new(
-          url: ENV['ELASTICSEARCH_URL'] || ENV['BONSAI_URL'],
-          log: ENV['DEBUG'] == 'true',
+          url: config.elasticsearch.url,
+          log: config.debug,
         )
+      end
+
+      def config
+        Travis::LogSearch.config
       end
     end
   end

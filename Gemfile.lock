@@ -4,6 +4,13 @@ GIT
   specs:
     jemalloc (1.0.2)
 
+GIT
+  remote: https://github.com/travis-ci/travis-config
+  revision: 0c5b76989c5da2b842e8ef02eb3082df09abe6c2
+  specs:
+    travis-config (1.1.2)
+      hashr (~> 2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -624,6 +631,7 @@ GEM
       multi_json
     faraday (0.15.2)
       multipart-post (>= 1.2, < 3)
+    hashr (2.0.1)
     i18n (1.1.0)
       concurrent-ruby (~> 1.0)
     jmespath (1.4.0)
@@ -660,6 +668,10 @@ DEPENDENCIES
   pg
   redis-namespace
   sidekiq
+  travis-config!
+
+RUBY VERSION
+   ruby 2.5.1p57
 
 BUNDLED WITH
-   1.16.1
+   1.16.4

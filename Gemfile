@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 ruby '2.5.1'
 
+gem 'travis-config', git: 'https://github.com/travis-ci/travis-config'
+
 gem 'activerecord'
 gem 'pg'
 gem 'elasticsearch'

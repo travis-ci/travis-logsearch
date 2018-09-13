@@ -1,6 +1,6 @@
 #!/bin/bash
 
-threads=${SIDEKIQ_THREADS:-8}
+threads=${SIDEKIQ_THREADS:-10}
 queues=$@
 
 export RUBYOPT="-Ilib $RUBYOPT"
