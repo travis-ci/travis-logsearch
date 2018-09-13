@@ -30,7 +30,7 @@ module Travis
     end
 
     def self.ingester
-      Thread.current[:ingester] ||= Ingester.new(config)
+      Thread.current[:ingester] ||= Ingester.new
     end
 
     def self.config
