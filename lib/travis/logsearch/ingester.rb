@@ -67,6 +67,7 @@ module Travis
           finished_at: job.finished_at,
           canceled_at: job.canceled_at,
           repo_slug: job.repository&.slug,
+          owner_name: job.repository.owner_name,
           raw_config: job.config&.config.to_json,
           config: job.config&.normalized,
         }
