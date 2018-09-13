@@ -16,8 +16,9 @@ module Travis
   module LogSearch
     def self.setup
       ActiveRecord::Base.establish_connection(
-        url:  ENV['DATABASE_URL'],
-        pool: ENV['DB_POOL']&.to_i || ENV['SIDEKIQ_THREADS']&.to_i,
+        adapter: 'postgresql',
+        url:     ENV['DATABASE_URL'],
+        pool:    ENV['DB_POOL']&.to_i || ENV['SIDEKIQ_THREADS']&.to_i,
       )
       ActiveRecord::Base.logger = Logger.new(STDOUT) if ENV['DEBUG'] == 'true'
 
