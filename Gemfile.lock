@@ -36,8 +36,7 @@ GIT
 
 GIT
   remote: https://github.com/travis-ci/travis-metrics
-  revision: c2149751894a5a45f2b0a567a50b36b8b586c0fc
-  branch: igor-heroku-app-name
+  revision: 9be3e37e09a1f89dcb6566132bb9dce276003205
   specs:
     travis-metrics (2.0.0)
       metriks-librato_metrics (~> 1.0)
