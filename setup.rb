@@ -15,7 +15,7 @@ es.indices.put_template(
     settings: {
       index: {
         number_of_shards: 5,
-        number_of_replicas: 1,
+        number_of_replicas: 0,
         highlight: {
           max_analyzed_offset: 5000000
         }
