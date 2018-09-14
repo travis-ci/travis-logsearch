@@ -2,8 +2,18 @@
 
 module Travis
   module LogSearch
-    ALIASES = %w[after_script after_success before_install
-                 before_script cache dpl install]
+    ALIASES = %w[
+      checkout
+      export setup announce
+      setup_casher setup_cache
+      debug
+      before_install install
+      before_script script
+      after_success after_failure after_script
+      before_cache cache reset_state
+      before_deploy deploy after_deploy dpl
+      before_finish finish
+    ]
 
     class Parser
       def folds(nodes)
