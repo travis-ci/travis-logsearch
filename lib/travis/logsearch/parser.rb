@@ -11,6 +11,7 @@ module Travis
         nodes
           .select { |n| n[:type] == :fold }
           .reject { |n| n[:name] =~ /fold-[0-9a-f]{8}/ }
+          .reject { |n| n[:name] =~ /test_project_[0-9]+/ }
           .map { |n|
             name = ALIASES[n[:name]] || n[:name]
             body = n[:body].strip
