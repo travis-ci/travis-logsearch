@@ -41,7 +41,6 @@ module Travis
         rest = folds
           .reject { |n| FOLDS_INCLUDE.include?(n[:name]) }
           .map { |n| n[:body] }
-          .to_h
 
         folds = folds
           .select { |n| FOLDS_INCLUDE.include?(n[:name]) }
