@@ -56,9 +56,18 @@ module Travis
           puts "Warning: no log found for job id=#{id} repo=#{job.repository.slug}"
         end
 
+        log_data = nil
+        if log
+          nodes = parser.parse(log)
+          log_data = {
+            folds: parser.filtered_folds(nodes),
+            text:  parser.text(nodes),
+          }
+        end
+
         doc = {
           job_id: id,
-          log: log ? clear_ansi(log) : nil,
+          log: log_data,
           repository_id: job.repository_id,
           queue: job.queue,
           state: job.state,
@@ -97,12 +106,6 @@ module Travis
         data['content']
       end
 
-      def clear_ansi(content)
-        content.gsub(/\r\r/, "\r")
-               .gsub(/^.*\r(?!$)/, '')
-               .gsub(/\x1b(\[|\(|\))[;?0-9]*[0-9A-Za-z]/m, '')
-      end
-
       def logs_conn
         @logs_conn ||= Faraday.new(url: ENV['LOGS_API_URL']) do |c|
           c.request :authorization, :token, ENV['LOGS_API_AUTH_TOKEN']
@@ -118,8 +121,13 @@ module Travis
       def es
         @es ||= Elasticsearch::Client.new(
           url: config.elasticsearch.url,
+          request_timeout: config.elasticsearch.timeout,
           log: config.debug,
         )
+      end
+
+      def parser
+        @parser ||= Parser.new
       end
 
       def config

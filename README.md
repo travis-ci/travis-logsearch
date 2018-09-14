@@ -24,7 +24,7 @@ export ELASTICSEARCH_URL=...
 ## Setup
 
 ```
-heroku run ruby setup.rb -a <travis-logsearch-*>
+heroku run bin/setup -a <travis-logsearch-*>
 ```
 
 ## TODO
