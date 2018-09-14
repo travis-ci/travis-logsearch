@@ -2,9 +2,7 @@
 
 module Travis
   module LogSearch
-    ALIASES = {
-      'install' => 'install.base'
-    }
+    ALIASES = %w[before_install before_script cache dpl install]
 
     class Parser
       def folds(nodes)
@@ -13,7 +11,10 @@ module Travis
           .reject { |n| n[:name] =~ /fold-[0-9a-f]{8}/ }
           .reject { |n| n[:name] =~ /test_project_[0-9]+/ }
           .map { |n|
-            name = ALIASES[n[:name]] || n[:name]
+            name = n[:name]
+            if ALIASES.include?(name)
+              name = "#{name}.1"
+            end
             body = n[:body].strip
             [name, body]
           }
