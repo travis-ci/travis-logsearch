@@ -60,7 +60,7 @@ module Travis
         if log
           nodes = parser.parse(log)
           log_data = {
-            folds: parser.folds(nodes),
+            folds: parser.filtered_folds(nodes),
             text:  parser.text(nodes),
           }
         end
