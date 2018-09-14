@@ -2,18 +2,7 @@
 
 module Travis
   module LogSearch
-    ALIASES = %w[
-      checkout
-      export setup announce
-      setup_casher setup_cache
-      debug
-      before_install install
-      before_script script
-      after_success after_failure after_script
-      before_cache cache reset_state
-      before_deploy deploy after_deploy dpl
-      before_finish finish
-    ]
+    ALIASES = {}
 
     class Parser
       def folds(nodes)
@@ -26,12 +15,15 @@ module Travis
           .reject { |n| n[:name] =~ /^Simple$/ }
           .map { |n|
             name = n[:name]
-            if ALIASES.include?(name)
-              name = "#{name}.1"
-            end
+            name = ALIASES[name] if ALIASES[name]
+            name = name.gsub(/\.[0-9]+$/, '')
+
             body = n[:body].strip
+
             [name, body]
           }
+          .group_by { |kv| kv[0] }
+          .map { |name, kvs| [name, kvs.map { |kv| kv[1] }.join("\n\n")] }
           .to_h
           .tap { |h|
             h.delete('system_info');
