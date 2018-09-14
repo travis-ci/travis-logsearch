@@ -684,6 +684,7 @@ GEM
     redis (4.0.2)
     redis-namespace (1.6.0)
       redis (>= 3.0.4)
+    rly (0.2.3)
     sentry-raven (2.7.4)
       faraday (>= 0.7.6, < 1.0)
     sidekiq (5.2.1)
@@ -707,6 +708,7 @@ DEPENDENCIES
   net-http-persistent
   pg
   redis-namespace
+  rly
   sidekiq
   travis-config!
   travis-exceptions!
