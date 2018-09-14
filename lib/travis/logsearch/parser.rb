@@ -2,11 +2,19 @@
 
 module Travis
   module LogSearch
+    ALIASES = {
+      'install' => 'install.base'
+    }
+
     class Parser
       def folds(nodes)
         nodes
           .select { |n| n[:type] == :fold }
-          .map { |n| [n[:name], n[:body].strip] }
+          .map { |n|
+            name = ALIASES[n[:name]] || n[:name]
+            body = n[:body].strip
+            [name, body]
+          }
           .to_h
           .tap { |h|
             h.delete('system_info');
