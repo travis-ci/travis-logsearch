@@ -9,8 +9,9 @@ module Travis
         config = self.config ? self.config : {}
 
         {
-          sudo: normalize_string(config['sudo']),
-          script: normalize_string(config['script']),
+          sudo:     normalize_string(config['sudo']),
+          script:   normalize_string(config['script']),
+          language: normalize_string(config['language']),
         }
       end
 
