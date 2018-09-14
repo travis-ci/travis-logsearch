@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+require 'elasticsearch'
+require 'date'
+
+unless ENV['ELASTICSEARCH_RETENTION_DAYS']
+  raise 'retention was not set'
+end
+
+days = ENV['ELASTICSEARCH_RETENTION_DAYS'].to_i
+
+es = Elasticsearch::Client.new(
+  url: ENV['ELASTICSEARCH_URL'] || ENV['BONSAI_URL'],
+  log: ENV['DEBUG'] == 'true',
+)
+
+today = Date.today + 5
+cutoff = today - days
+
+indices = es.cat.indices(index: 'events-*', format: 'json')
+indices.each do |idx|
+  index_name = idx['index']
+  m = /^events-(\d{4}_\d{2}_\d{2})$/.match(index_name)
+  unless m
+    warn "invalid index name #{index_name}"
+    next
+  end
+  index_date = Date.parse(m[1].gsub('_', '-'))
+  if index_date < cutoff
+    puts "deleting index #{index_name}"
+    es.indices.delete(index: index_name)
+  end
+end

@@ -29,5 +29,4 @@ heroku run bin/setup -a <travis-logsearch-*>
 
 ## TODO
 
-* limit retention to a week or so
 * docs
