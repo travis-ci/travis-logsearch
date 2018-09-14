@@ -58,10 +58,7 @@ module Travis
           .group_by { |n| n[:name] }
           .map { |name, nodes|
             name = "#{name}.root" if ALIASES.include?(name)
-            [
-              name,
-              { type: :fold, name: name, body: nodes.map { |n| n[:body] }.join("\n\n") }
-            ]
+            { type: :fold, name: name, body: nodes.map { |n| n[:body] }.join("\n\n") }
           }
       end
 
