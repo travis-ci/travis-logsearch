@@ -8,6 +8,7 @@ require 'travis/support/sidekiq'
 require 'travis/logsearch/config'
 require 'travis/logsearch/model'
 require 'travis/logsearch/parser'
+require 'travis/logsearch/batcher'
 require 'travis/logsearch/ingester'
 require 'travis/logsearch/worker'
 
@@ -18,6 +19,8 @@ module Travis
       Exceptions.setup(config, config.env, logger)
       Sidekiq.setup(config)
       @metrics = Metrics.setup(config[:metrics].to_h, logger)
+
+      ingester.start_flush_thread
     end
 
     def self.ingester

@@ -700,6 +700,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord
   aws-sdk (~> 3)
+  concurrent-ruby
   elasticsearch
   faraday
   jemalloc!

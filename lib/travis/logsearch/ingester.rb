@@ -11,18 +11,27 @@ module Travis
     class Ingester
       def run(job_id)
         job = Job.includes(:config).includes(:repository).find(job_id)
-        docs = process_jobs([job])
-        send_to_elasticsearch(docs)
+        doc = process_job(job)
+        send_to_elasticsearch(doc)
       end
 
-      def send_to_elasticsearch(docs)
-        docs.each do |doc|
-          es.create(
-            index: es_index_name,
-            type: 'doc',
-            body: doc,
-          )
+      def start_flush_thread
+        if ENV['BATCHING_ENABLED'] == 'true'
+          batcher.start_flush_thread
         end
+      end
+
+      def send_to_elasticsearch(doc)
+        if ENV['BATCHING_ENABLED'] == 'true'
+          batcher.index(doc)
+          return
+        end
+
+        es.create(
+          index: es_index_name,
+          type: 'doc',
+          body: doc,
+        )
       end
 
       # create one index per day (so that we can manage retention)
@@ -30,19 +39,6 @@ module Travis
       # auto-create patterns on bonsai elasticsearch
       def es_index_name
         'events-' + DateTime.now.strftime('%Y_%m_%d')
-      end
-
-      def process_jobs(jobs)
-        docs = []
-        jobs.each do |job|
-          begin
-            docs << process_job(job)
-          rescue => e
-            raise
-            puts "error: #{e.class}: #{e}"
-          end
-        end
-        docs
       end
 
       def process_job(job)
@@ -128,6 +124,10 @@ module Travis
 
       def parser
         @parser ||= Parser.new
+      end
+
+      def batcher
+        @batcher ||= Batcher.new
       end
 
       def config
