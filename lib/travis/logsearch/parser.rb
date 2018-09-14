@@ -10,6 +10,7 @@ module Travis
       def folds(nodes)
         nodes
           .select { |n| n[:type] == :fold }
+          .reject { |n| n[:name] =~ /fold-[0-9a-f]{8}/ }
           .map { |n|
             name = ALIASES[n[:name]] || n[:name]
             body = n[:body].strip
