@@ -121,6 +121,7 @@ module Travis
       def es
         @es ||= Elasticsearch::Client.new(
           url: config.elasticsearch.url,
+          request_timeout: config.elasticsearch.timeout,
           log: config.debug,
         )
       end
