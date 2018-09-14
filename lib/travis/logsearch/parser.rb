@@ -11,8 +11,9 @@ module Travis
       before_script script
       after_success after_failure after_script
       before_cache cache reset_state
-      before_deploy deploy after_deploy dpl
+      before_deploy deploy after_deploy
       before_finish finish
+      build cache dpl lint
     ]
 
     class Parser
