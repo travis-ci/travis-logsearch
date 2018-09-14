@@ -60,7 +60,7 @@ module Travis
             name = "#{name}.root" if ALIASES.include?(name)
             [
               name,
-              { type: :fold, name: name, body: nodes.map { |n| n[:body] }.join("\n\n") } }
+              { type: :fold, name: name, body: nodes.map { |n| n[:body] }.join("\n\n") }
             ]
           }
       end
