@@ -8,8 +8,9 @@ module Travis
       def folds(nodes)
         nodes
           .select { |n| n[:type] == :fold }
-          .reject { |n| n[:name] =~ /fold-[0-9a-f]{8}/ }
-          .reject { |n| n[:name] =~ /test_project_[0-9]+/ }
+          .reject { |n| n[:name] =~ /^fold-[0-9a-f]{8}$/ }
+          .reject { |n| n[:name] =~ /^test_project_[0-9]+$/ }
+          .reject { |n| n[:name] =~ /^[0-9]+$/ }
           .map { |n|
             name = n[:name]
             if ALIASES.include?(name)
