@@ -7,6 +7,7 @@ require 'travis/support/database'
 require 'travis/support/sidekiq'
 require 'travis/logsearch/config'
 require 'travis/logsearch/model'
+require 'travis/logsearch/parser'
 require 'travis/logsearch/ingester'
 require 'travis/logsearch/worker'
 
