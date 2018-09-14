@@ -16,38 +16,59 @@ module Travis
       build cache dpl lint
     ]
 
+    FOLDS_INCLUDE = %w[
+      after_deploy.root after_failure.root after_script.root after_success.root
+      announce.root folds.apt artifacts.setup
+      before_cache.root before_deploy.root before_install.root before_script.root
+      cache.bundler cache.cargo cache.ccache cache.pip cache.root cache.yarn ccache.stats
+      configure git.checkout
+      install.bundler install.deps install.hex install.npm install.rebar install.root
+      install.yarn
+      services
+      step_start_instance step_upload_script
+      worker_info
+    ]
+
+    FOLDS_DROP = %w[
+      system_info rvm ruby.versions
+    ]
+
     class Parser
+      def filtered_folds(nodes)
+        folds = folds(nodes)
+          .reject { |n| FOLDS_DROP.include?(n[:name]) }
+
+        rest = folds
+          .reject { |n| FOLDS_INCLUDE.include?(n[:name]) }
+          .map { |n| n[:body] }
+          .to_h
+
+        folds = folds
+          .select { |n| FOLDS_INCLUDE.include?(n[:name]) }
+          .map { |n| [n[:name], n[:body]] }
+          .to_h
+
+        folds['rest'] = rest.join("\n\n")
+        folds
+      end
+
       def folds(nodes)
         nodes
           .select { |n| n[:type] == :fold }
-          .reject { |n| n[:name] =~ /^fold-[0-9a-f]{8}$/ }
-          .reject { |n| n[:name] =~ /^test_project_[0-9]+$/ }
-          .reject { |n| n[:name] =~ /^[0-9]+$/ }
-          .reject { |n| n[:name] =~ /^test./ }
-          .reject { |n| n[:name] =~ /^Simple$/ }
-          .map { |n|
-            name = n[:name]
-            name = name.gsub(/\.[0-9]+$/, '')
+          .group_by { |n| n[:name] }
+          .map { |name, nodes|
             name = "#{name}.root" if ALIASES.include?(name)
-
-            body = n[:body].strip
-
-            [name, body]
-          }
-          .group_by { |kv| kv[0] }
-          .map { |name, kvs| [name, kvs.map { |kv| kv[1] }.join("\n\n")] }
-          .to_h
-          .tap { |h|
-            h.delete('system_info');
-            h.delete('rvm');
-            h.delete('ruby.versions')
+            [
+              name,
+              { type: :fold, name: name, body: nodes.map { |n| n[:body] }.join("\n\n") } }
+            ]
           }
       end
 
       def text(nodes)
         nodes
           .select { |n| n[:type] == :text }
-          .map { |n| n[:body].strip }
+          .map { |n| n[:body] }
           .join("\n\n")
       end
 
@@ -56,9 +77,9 @@ module Travis
           .scan(/(?:travis_fold:start:(.+?)\r(.+?)travis_fold:end:(.+?)|(.+?)(?=travis_fold:start|\z))/m)
           .map { |m|
             if m[0]
-              { type: :fold, name: m[0], body: m[1] }
+              { type: :fold, name: m[0].strip.gsub(/\.[0-9]+$/, ''), body: m[1].strip }
             else
-              { type: :text, body: m[3] }
+              { type: :text, body: m[3].strip }
             end
           }
           .map { |n|
