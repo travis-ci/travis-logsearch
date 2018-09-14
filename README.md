@@ -30,5 +30,4 @@ heroku run ruby setup.rb -a <travis-logsearch-*>
 ## TODO
 
 * limit retention to a week or so
-* site awareness
 * docs
