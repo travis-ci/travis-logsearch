@@ -14,7 +14,7 @@ es = Elasticsearch::Client.new(
   log: ENV['DEBUG'] == 'true',
 )
 
-today = Date.today + 5
+today = Date.today
 cutoff = today - days
 
 indices = es.cat.indices(index: 'events-*', format: 'json')
