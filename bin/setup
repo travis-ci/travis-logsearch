@@ -2,6 +2,11 @@
 
 require 'elasticsearch'
 
+unless ENV['ELASTICSEARCH_SHARDS'] && ENV['ELASTICSEARCH_REPLICAS']
+  warn "Please set the env vars ELASTICSEARCH_SHARDS and ELASTICSEARCH_REPLICAS"
+  exit 1
+end
+
 es = Elasticsearch::Client.new(
   url: ENV['ELASTICSEARCH_URL'] || ENV['BONSAI_URL'],
   log: ENV['DEBUG'] == 'true',
@@ -13,8 +18,8 @@ es.indices.put_template(
     template: 'events-*',
     settings: {
       index: {
-        number_of_shards: 8,
-        number_of_replicas: 0,
+        number_of_shards:   ENV['ELASTICSEARCH_SHARDS'].to_i,
+        number_of_replicas: ENV['ELASTICSEARCH_REPLICAS'].to_i,
         highlight: {
           max_analyzed_offset: 5000000
         }
